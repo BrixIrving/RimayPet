@@ -11,5 +11,7 @@ Red social para dueños de mascotas de Ayacucho, con alerta geolocalizada de mas
 | Carpeta | Contenido |
 |---|---|
 | `docs/00-propuesta` | Propuesta de arquitectura de software |
+| `docs/01-analisis-de-sistema` | Actores, historias, requisitos, calidad, restricciones y drivers |
+| `docs/02-arquitectura-software` | Arquitectura inicial |
 
 Avance por etapas: ver la guía de commits del equipo.
