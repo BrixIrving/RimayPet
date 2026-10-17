@@ -25,5 +25,9 @@ Red social para dueños de mascotas de Ayacucho, con alerta geolocalizada de mas
 | `docs/01-analisis-de-sistema` | (+ decisiones arquitectónicas) |
 | `docs/02-arquitectura-software` | (+ estilo y enfoque arquitectónico) |
 | `tecnologia/boilerplate-clean-architecture` | Ejemplo de Clean Architecture: dominio y aplicación |
-
-Avance por etapas: ver la guía de commits del equipo.
+| `docs/01-analisis-de-sistema` | (+ escenarios de calidad) |
+| `docs/02-arquitectura-software` | (+ componentes arquitectónicos) |
+| `docs/03-diseño-de-software` | Diseño interno, patrones y principios |
+| `docs/04-modelo-c4` | Modelo C4, niveles 1 a 4 |
+| `docs/trazabilidad.md` | De qué requisito sale cada componente |
+| `tecnologia/boilerplate-clean-architecture` | (+ infraestructura, presentación y pruebas completas) |
