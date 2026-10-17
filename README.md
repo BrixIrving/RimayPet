@@ -6,6 +6,15 @@ Red social para dueños de mascotas de Ayacucho, con alerta geolocalizada de mas
 
 **Curso:** Arquitectura de Software [IS-488] · Semestre 2026-II · UNSCH
 
+## Decisiones principales
+
+| Aspecto | Decisión |
+|---|---|
+| Estilo arquitectónico | Microservicios con comunicación orientada a eventos (Redis Pub/Sub) |
+| Enfoque interno | Clean Architecture con cuatro capas (Dominio, Aplicación, Presentación, Infraestructura) |
+| Entrada | API Gateway con JWT; PWA como cliente |
+| Despliegue | Docker Compose en dos servidores de Oracle Cloud Free Tier |
+
 ## Contenido
 
 | Carpeta | Contenido |
@@ -13,5 +22,8 @@ Red social para dueños de mascotas de Ayacucho, con alerta geolocalizada de mas
 | `docs/00-propuesta` | Propuesta de arquitectura de software |
 | `docs/01-analisis-de-sistema` | Actores, historias, requisitos, calidad, restricciones y drivers |
 | `docs/02-arquitectura-software` | Arquitectura inicial |
+| `docs/01-analisis-de-sistema` | (+ decisiones arquitectónicas) |
+| `docs/02-arquitectura-software` | (+ estilo y enfoque arquitectónico) |
+| `tecnologia/boilerplate-clean-architecture` | Ejemplo de Clean Architecture: dominio y aplicación |
 
 Avance por etapas: ver la guía de commits del equipo.
