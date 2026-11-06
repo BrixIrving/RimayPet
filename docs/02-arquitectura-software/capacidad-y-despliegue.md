@@ -8,8 +8,8 @@ El diseño toma como base dos VM Arm Oracle Cloud Free Tier, cada una con 1 OCPU
 
 | Nodo | Recursos | Contenedores / procesos | Responsabilidad |
 |---|---|---|---|
-| **Servidor 1 — Aplicación** | 1 OCPU, 6 GB RAM | Caddy; PWA estática; `rimaypet-api-1`; `rimaypet-worker`; caché local limitada dentro de la API. | Entrada HTTPS, API principal, WebSocket y procesamiento asíncrono. |
-| **Servidor 2 — Datos** | 1 OCPU, 6 GB RAM | PostgreSQL + PostGIS; respaldos y métricas de base. En modo de escalado, `rimaypet-api-2` del mismo artefacto, solo si las mediciones muestran margen de CPU en este nodo. | Persistencia primaria. API secundaria condicional. |
+| **Servidor 1 - Aplicación** | 1 OCPU, 6 GB RAM | Caddy; PWA estática; `rimaypet-api-1`; `rimaypet-worker`; caché local limitada dentro de la API. | Entrada HTTPS, API principal, WebSocket y procesamiento asíncrono. |
+| **Servidor 2 - Datos** | 1 OCPU, 6 GB RAM | PostgreSQL + PostGIS; respaldos y métricas de base. En modo de escalado, `rimaypet-api-2` del mismo artefacto, solo si las mediciones muestran margen de CPU en este nodo. | Persistencia primaria. API secundaria condicional. |
 
 **Balanceo:** Caddy en el servidor 1 distribuye tráfico HTTP entre `api-1` y, si se activa, `api-2` en el servidor 2. WebSocket se enruta con afinidad por conexión; no se requiere sticky session para JWT sin estado. Para mensajes entre instancias se usa PostgreSQL `LISTEN/NOTIFY` como señal efímera; el mensaje de negocio ya está persistido.
 
@@ -20,11 +20,11 @@ El diseño toma como base dos VM Arm Oracle Cloud Free Tier, cada una con 1 OCPU
 | Componente | Servidor 1 | Servidor 2 |
 |---|---:|---:|
 | SO, Docker y agentes | 0.8–1.2 GB | 0.8–1.2 GB |
-| Caddy + estáticos | 100–200 MB | — |
-| API principal | 300–500 MB | — |
-| Worker | 150–300 MB | — |
-| PostgreSQL + PostGIS | — | 1.5–2.5 GB (ajustable) |
-| API secundaria (condicional) | — | 300–500 MB |
+| Caddy + estáticos | 100–200 MB | - |
+| API principal | 300–500 MB | - |
+| Worker | 150–300 MB | - |
+| PostgreSQL + PostGIS | - | 1.5–2.5 GB (ajustable) |
+| API secundaria (condicional) | - | 300–500 MB |
 | Caché / margen | 0.5–1 GB | 1–2 GB para PostgreSQL y SO |
 | **Objetivo** | Mantener margen operativo | Evitar que la API secundaria compita con la base |
 

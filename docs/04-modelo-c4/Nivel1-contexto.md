@@ -1,4 +1,4 @@
-# C4 — Nivel 1: contexto del sistema
+# C4 - Nivel 1: contexto del sistema
 
 ![C4 nivel 1](../diagramas/c4-nivel1-contexto.svg)
 

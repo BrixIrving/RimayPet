@@ -27,11 +27,11 @@ RimayPet tiene **seis módulos de negocio** y un núcleo técnico compartido. Lo
 
 | Módulo consumidor | Fachada que puede invocar | Eventos que consume |
 |---|---|---|
-| Identidad | Ninguna | — |
+| Identidad | Ninguna | - |
 | Perfiles | Identidad | `UsuarioRegistrado` |
-| Publicaciones | Perfiles | — |
-| Mensajería | Perfiles | — |
-| Alertas | Perfiles | — |
+| Publicaciones | Perfiles | - |
+| Mensajería | Perfiles | - |
+| Alertas | Perfiles | - |
 | Notificaciones | Perfiles | `MascotaPerdidaReportada`, `AvistamientoRegistrado`, `EstadoReporteCambiado`, `MensajeEnviado` |
 
 Las consultas a otros módulos se realizan por fachada y DTO, nunca por SQL cruzado. El grafo es acíclico: Identidad → Perfiles → módulos consumidores.

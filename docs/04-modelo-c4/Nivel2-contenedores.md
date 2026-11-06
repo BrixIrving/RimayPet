@@ -1,4 +1,4 @@
-# C4 — Nivel 2: contenedores
+# C4 - Nivel 2: contenedores
 
 El monolito modular se despliega como una aplicación con dos procesos (API y worker) construidos desde el mismo código. PostgreSQL es el único almacén relacional; los esquemas están separados por módulo.
 

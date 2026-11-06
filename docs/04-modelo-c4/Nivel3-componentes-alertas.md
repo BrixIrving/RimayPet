@@ -1,4 +1,4 @@
-# C4 — Nivel 3: componentes del módulo Alertas
+# C4 - Nivel 3: componentes del módulo Alertas
 
 ![C4 nivel 3](../diagramas/c4-nivel3-alertas.svg)
 

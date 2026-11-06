@@ -1,4 +1,4 @@
-# Sprint 1 — Fundamentos, análisis y arquitectura base
+# Sprint 1 - Fundamentos, análisis y arquitectura base
 
 ## Objetivo del sprint
 

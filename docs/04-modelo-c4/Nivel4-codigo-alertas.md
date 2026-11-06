@@ -1,4 +1,4 @@
-# C4 — Nivel 4: código del caso de uso ReportarMascotaPerdida
+# C4 - Nivel 4: código del caso de uso ReportarMascotaPerdida
 
 ```mermaid
 classDiagram
