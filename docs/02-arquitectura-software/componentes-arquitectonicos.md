@@ -1,17 +1,20 @@
 # Componentes arquitectónicos
 
-![Arquitectura técnica de RimayPet](../img/arquitectura-tecnica.png)
+![Topología de despliegue](../diagramas/c4-nivel2-contenedores.svg)
 
-| Componente | Responsabilidad | Tecnología propuesta | Hardware (pruebas) |
-|---|---|---|---|
-| **PWA** | Interfaz del dueño y del moderador. | React, Angular o Vue | Navegador moderno |
-| **API Gateway** | Enrutamiento, validación de JWT y HTTPS. | NGINX o Node.js, Docker | 2 vCPU, 2 GB RAM |
-| **Servicio de Perfiles** | Registro, inicio de sesión, emisión de JWT, perfiles, privacidad, verificación y módulo de Moderación y Reportes. | Spring Boot, Node.js (Express) o FastAPI | 1 vCPU, 1 GB RAM |
-| **Servicio de Publicaciones** | Publicaciones, reacciones, comentarios y feed. | Ídem | 1 vCPU, 1 GB RAM |
-| **Servicio de Mensajería** | Mensajes directos y canal WebSocket. | Ídem | 1 vCPU, 1 GB RAM |
-| **Servicio de Alertas** | Reportes de mascota perdida, avistamientos, estados y búsqueda por radio. | Ídem | 1 vCPU, 1 GB RAM |
-| **Servicio de Notificaciones** | Se suscribe a eventos y envía notificaciones push y alertas masivas de forma asíncrona. | Ídem | 1 vCPU, 1 GB RAM |
-| **Redis** | Bus Pub/Sub y caché. | Redis | 1 vCPU, 1 GB RAM |
-| **PostgreSQL + PostGIS** | Una base de datos por servicio. | PostgreSQL 15 con PostGIS | 2 vCPU, 4 GB RAM, SSD |
-| **Almacenamiento de medios** | Fotos y videos servidos mediante CDN. | Cloudflare R2 o Supabase Storage | Gestionado |
-| **CI/CD** | Pruebas, construcción de imágenes y despliegue. | Docker, Docker Compose, GitHub Actions | Según proveedor |
+| Componente | Tipo | Responsabilidad |
+|---|---|---|
+| PWA React | Cliente | Interfaz responsive, navegación y comunicación REST/WebSocket. |
+| Caddy | Proxy inverso | TLS, compresión, límites de tasa y balanceo condicional entre procesos API. No contiene reglas de negocio. |
+| API | Proceso del monolito | Punto de entrada REST/WS, autenticación y composición de seis módulos. |
+| Worker | Proceso del monolito | Despacha Outbox, reintenta efectos diferidos y entrega notificaciones. |
+| Módulos | Componentes lógicos | Identidad, Perfiles, Publicaciones, Mensajería, Alertas y Notificaciones. No se despliegan por separado. |
+| PostgreSQL + PostGIS | Persistencia | Una instancia primaria con esquema por módulo y esquema técnico Outbox. |
+| Cloudflare R2 | Servicio externo | Almacena medios con URL firmadas. |
+| Web Push | Servicio externo | Entrega notificaciones push. |
+| GitHub Actions | CI/CD | Ejecuta pruebas, construye imagen ARM y despliega por SSH. |
+
+## Distribución física
+
+- VM1: Caddy, estáticos PWA, API principal y worker.
+- VM2: PostgreSQL/PostGIS. API secundaria opcional, solo tras medición y si no degrada la base.

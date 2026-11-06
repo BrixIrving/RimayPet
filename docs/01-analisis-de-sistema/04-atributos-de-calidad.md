@@ -1,14 +1,19 @@
 # Atributos de calidad
 
-Escenario que los pone a prueba: durante la difusión de una alerta de mascota perdida, o ante el crecimiento de la comunidad hasta 1000 usuarios registrados, el sistema recibe muchas solicitudes simultáneas (feed, mensajería y notificaciones).
+## Prioridades arquitectónicas
 
-| ID | Atributo | Descripción general | Prioridad |
-|---|---|---|---|
-| **AC02** | Disponibilidad | La plataforma debe mantenerse operativa de forma continua, en particular durante la propagación de una alerta. | Muy alta |
-| **AC01** | Rendimiento | El feed y la mensajería deben responder con baja latencia con alta concurrencia. | Alta |
-| **AC03** | Escalabilidad | Debe soportar hasta 1000 usuarios registrados, escalando cada microservicio de forma independiente. | Alta |
-| **AC04** | Seguridad | Las comunicaciones y los datos deben protegerse con JWT y HTTPS. | Alta |
-| **AC05** | Mantenibilidad | Debe permitir incorporar nuevos módulos sin afectar los servicios existentes. | Media-alta |
-| **AC06** | Observabilidad | Los registros y métricas deben permitir diagnosticar fallos en la propagación de alertas. | Media |
+| Prioridad | Atributo | Objetivo para RimayPet |
+|---|---|---|
+| 1 | Escalabilidad y rendimiento | Atender hasta 1000 sesiones concurrentes con actividad normal, manteniendo tiempos de respuesta aceptables y uso controlado de CPU. |
+| 2 | Disponibilidad | Mantener la API operativa durante el procesamiento de alertas; tolerar la caída temporal del worker sin perder eventos confirmados. |
+| 3 | Seguridad | Proteger identidad, datos personales, ubicación y recursos mediante autenticación, autorización, cifrado y auditoría. |
+| 4 | Desplegabilidad | Construir y desplegar el mismo artefacto de forma reproducible en dos VM, con verificación y posibilidad de rollback. |
 
-> Estas descripciones generales se convierten en escenarios medibles en `08-escenarios-atributos-calidad.md`.
+## Atributos transversales
+
+- **Mantenibilidad:** fronteras modulares, Clean Architecture, pruebas de arquitectura y contratos explícitos.
+- **Observabilidad:** logs estructurados, identificador de correlación, métricas, health checks y alertas operativas.
+- **Testabilidad:** dominio y casos de uso verificables sin infraestructura externa.
+- **Interoperabilidad:** API REST versionada y contrato OpenAPI; WebSocket documentado para mensajería.
+
+Las metas numéricas son objetivos de diseño propuestos y deben validarse en la infraestructura real. No se presentan como resultados medidos.

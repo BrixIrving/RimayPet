@@ -1,0 +1,9 @@
+flowchart LR
+  CLIENTE["PWA"] -->|"HTTPS REST / WS"| API["API"]
+  API -->|"fachada + DTO"| MOD["Módulo destino"]
+  MOD -->|"misma transacción"| DB[("PostgreSQL")]
+  MOD -->|"evento"| OUT[("Outbox")]
+  WORKER["Worker"] -->|"SKIP LOCKED"| OUT
+  WORKER -->|"fachada local"| PERF["Perfiles: destinatarios en radio"]
+  WORKER -->|"HTTPS / VAPID"| PUSH["Web Push"]
+  CLIENTE <-->|"URL firmada"| R2["R2 · transferencia directa"]

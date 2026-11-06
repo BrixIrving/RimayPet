@@ -1,0 +1,27 @@
+flowchart TB
+  UI["PWA React"] --> API["Proceso API · REST + WebSocket"]
+  subgraph M["Monolito modular · un artefacto"]
+    direction LR
+    ID["Identidad"]
+    PF["Perfiles"]
+    PU["Publicaciones"]
+    ME["Mensajería"]
+    AL["Alertas"]
+    NO["Notificaciones"]
+  end
+  API --> ID
+  API --> PF
+  API --> PU
+  API --> ME
+  API --> AL
+  API --> NO
+  ID --> DB[("PostgreSQL + PostGIS · esquema por módulo")]
+  PF --> DB
+  PU --> DB
+  ME --> DB
+  AL --> DB
+  NO --> DB
+  W["Worker · mismo código / imagen"] --> DB
+  W --> NO
+  SH["Shared técnico · auth · outbox · config · logs"]
+  API --> SH

@@ -1,0 +1,9 @@
+flowchart TB
+  C["AlertasController · Presentación"] --> UC["ReportarMascotaPerdida · Aplicación"]
+  UC --> D["ReporteMascotaPerdida · Dominio"]
+  UC --> RP["RepositorioReportes · Puerto"]
+  UC --> PE["PublicadorEventos · Puerto"]
+  RP -. implementado por .-> PG["RepositorioPostgres"]
+  PE -. implementado por .-> OP["OutboxPostgres"]
+  PG --> DB[("PostgreSQL · esquema alertas")]
+  OP --> DB

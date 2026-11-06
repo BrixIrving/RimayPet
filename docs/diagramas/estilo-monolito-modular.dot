@@ -1,0 +1,23 @@
+digraph G {
+ graph [splines=ortho, rankdir=TB, bgcolor="white", pad="0.25", nodesep="0.35", ranksep="0.45", fontname="Arial", labelloc="t", label="RIMAYPET · MONOLITO MODULAR + CLEAN ARCHITECTURE", fontsize=18];
+ node [shape=box, style="rounded,filled", fontname="Arial", fontsize=10, color="#334455", fillcolor="#eef4fb", margin="0.15,0.10"];
+ edge [fontname="Arial", fontsize=9, color="#526477", arrowsize=0.7];
+ pwa [label="PWA React", fillcolor="#e7f3ff"];
+ api [label="Proceso API\nREST + WebSocket", fillcolor="#dcecff"];
+ subgraph cluster_mod { label="Una aplicación · seis módulos de negocio"; style="rounded"; color="#778899"; bgcolor="#f8fafc";
+  id [label="Identidad\nClean Architecture"];
+  pf [label="Perfiles\nClean Architecture"];
+  pub [label="Publicaciones\nClean Architecture"];
+  msg [label="Mensajería\nClean Architecture"];
+  al [label="Alertas\nClean Architecture"];
+  no [label="Notificaciones\nClean Architecture"];
+  {rank=same; id; pf; pub; msg; al; no;}
+ }
+ shared [label="Shared técnico\nAuth · Outbox · Config · Logs", fillcolor="#fff4df"];
+ db [shape=cylinder, label="PostgreSQL + PostGIS\nEsquema por módulo + Outbox", fillcolor="#e8f6eb"];
+ worker [label="Worker\nMismo código e imagen", fillcolor="#fff4df"];
+ pwa -> api; api -> id; api -> pf; api -> pub; api -> msg; api -> al; api -> no;
+ id -> shared [style=dashed, arrowhead=none]; pf -> shared [style=dashed, arrowhead=none];
+ al -> db; pub -> db; msg -> db; id -> db; pf -> db; no -> db; worker -> db;
+ worker -> no [label="procesa eventos"];
+}

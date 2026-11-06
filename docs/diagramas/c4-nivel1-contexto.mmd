@@ -1,0 +1,6 @@
+flowchart LR
+  Owner["Dueño / comunidad"] --> RP["RimayPet"]
+  Mod["Moderador / administrador"] --> RP
+  Visit["Visitante"] --> RP
+  RP --> R2["Cloudflare R2"]
+  RP --> Push["Web Push"]

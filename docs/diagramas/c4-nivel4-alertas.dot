@@ -1,0 +1,14 @@
+digraph G {
+ graph [rankdir=LR, bgcolor="white", pad="0.25", nodesep="0.4", ranksep="0.55", fontname="Arial", labelloc="t", label="C4 · NIVEL 4 · CASO DE USO REPORTAR MASCOTA PERDIDA", fontsize=18];
+ node [shape=box, style="rounded,filled", fontname="Arial", fontsize=10, color="#334455", fillcolor="#eef4fb", margin="0.15,0.10"];
+ edge [fontname="Arial", fontsize=9, color="#526477", arrowsize=0.7];
+ ctrl [label="AlertasController\ncrearReporte(dto, usuarioId)"];
+ uc [label="ReportarMascotaPerdida\nejecutar(comando)",fillcolor="#dcecff"];
+ entity [label="ReporteMascotaPerdida\ncrear() · marcarAvistada()\nmarcarEncontrada()",fillcolor="#e8f6eb"];
+ loc [label="Ubicacion"]; rad [label="RadioBusqueda"];
+ port1 [label="RepositorioReportes\n<<interface>>",shape=component];
+ port2 [label="PublicadorEventos\n<<interface>>",shape=component];
+ repo [label="RepositorioPostgres"];
+ out [label="OutboxPostgres"];
+ ctrl -> uc; uc -> entity; entity -> loc; entity -> rad; uc -> port1; uc -> port2; repo -> port1 [style=dashed]; out -> port2 [style=dashed];
+}

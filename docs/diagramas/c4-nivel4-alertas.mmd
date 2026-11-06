@@ -1,0 +1,22 @@
+classDiagram
+  class AlertasController
+  class ReportarMascotaPerdida
+  class ReporteMascotaPerdida
+  class Ubicacion
+  class RadioBusqueda
+  class RepositorioReportes {
+    <<interface>>
+  }
+  class PublicadorEventos {
+    <<interface>>
+  }
+  class RepositorioPostgres
+  class OutboxPostgres
+  AlertasController --> ReportarMascotaPerdida
+  ReportarMascotaPerdida --> ReporteMascotaPerdida
+  ReporteMascotaPerdida *-- Ubicacion
+  ReporteMascotaPerdida *-- RadioBusqueda
+  ReportarMascotaPerdida --> RepositorioReportes
+  ReportarMascotaPerdida --> PublicadorEventos
+  RepositorioPostgres ..|> RepositorioReportes
+  OutboxPostgres ..|> PublicadorEventos

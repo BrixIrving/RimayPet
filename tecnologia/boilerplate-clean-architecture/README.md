@@ -1,36 +1,25 @@
-# Boilerplate Clean Architecture · Servicio de Alertas de RimayPet
+# Ejemplo Clean Architecture — módulo Alertas
 
-Ejemplo **de lectura y ejecución** (no es el sistema completo). Muestra cómo se organizan las responsabilidades y dependencias del servicio de Alertas con las cuatro capas del proyecto. No tiene dependencias externas: solo requiere Node.js 18 o superior.
+Este directorio contiene un corte vertical didáctico del módulo Alertas dentro del **monolito modular RimayPet**. No es un microservicio independiente.
+
+## Qué demuestra
+
+- Dominio aislado de frameworks y persistencia.
+- Casos de uso que dependen de puertos.
+- Adaptadores en memoria para repositorio y publicación.
+- Composición por inyección de dependencias.
+- Pruebas de reglas de dominio, casos de uso y dirección de dependencias.
+
+## Qué no implementa aún
+
+La conexión productiva a PostgreSQL/PostGIS, Transactional Outbox, worker, JWT, R2, Web Push, API REST desplegable y pruebas de 1000 usuarios son trabajo de los siguientes incrementos.
+
+## Ejecutar
 
 ```bash
-npm test        # pruebas del dominio, del caso de uso y de la regla de dependencia
-npm run demo    # ejecuta el flujo "reportar mascota perdida" en memoria
+npm install
+npm test
+npm run demo
 ```
 
-## Estructura
-
-```text
-src/
-├── alertas/
-│   ├── domain/           # Dominio: entidades, objetos de valor, errores (no importa nada)
-│   ├── application/      # Aplicación: casos de uso y puertos
-│   │   ├── casos-de-uso/
-│   │   └── ports/
-│   ├── infrastructure/   # Infraestructura: adaptadores (aquí en memoria)
-│   └── presentation/     # Presentación: controlador sin framework
-└── composition/          # Único lugar que conoce todas las capas
-test/
-```
-
-## Dónde irían las tecnologías reales
-
-| Puerto | Adaptador de este ejemplo | Adaptador real |
-|---|---|---|
-| `RepositorioReportes` | `RepositorioReportesMemoria` | `RepositorioReportesPostGIS` (PostgreSQL + PostGIS) |
-| `PublicadorEventos` | `PublicadorEventosMemoria` | `PublicadorRedis` (Redis Pub/Sub) |
-
-Cambiar de adaptador solo exige modificar `src/composition/`. El dominio y los casos de uso no cambian (escenario EQ-05).
-
-## Regla de dependencia
-
-La prueba `test/regla-de-dependencia.test.js` revisa que `domain/` y `application/` no importen `infrastructure/` ni `presentation/`.
+Este ejemplo no debe describirse como una arquitectura de microservicios.

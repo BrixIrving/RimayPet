@@ -1,28 +1,79 @@
-<p align="center"><img src="docs/img/RimayPet_logo.png" alt="RimayPet" width="360"></p>
+# RimayPet — Arquitectura de Software
 
-# RimayPet · Documentación de arquitectura
+RimayPet es una red social para dueños de mascotas que integra perfiles, publicaciones, mensajería y alertas geolocalizadas para mascotas perdidas.
 
-Red social para dueños de mascotas de Ayacucho, con alerta geolocalizada de mascotas perdidas.
+## Decisión arquitectónica vigente
 
-**Curso:** Arquitectura de Software [IS-488] · Semestre 2026-II · UNSCH
+- **Estilo:** monolito modular.
+- **Enfoque:** Clean Architecture aplicada dentro de cada módulo.
+- **Procesos:** API HTTP/WebSocket y worker asíncrono, construidos desde el mismo código y artefacto.
+- **Persistencia:** una instancia PostgreSQL + PostGIS, con un esquema por módulo.
+- **Eventos:** patrón Transactional Outbox en PostgreSQL; consumidores idempotentes.
+- **Infraestructura:** dos VM Oracle Cloud Free Tier (1 OCPU y 6 GB RAM por VM, según el dimensionamiento documentado).
+- **Meta de capacidad:** hasta 1000 sesiones concurrentes con perfil de actividad normal; es un objetivo de prueba, no una capacidad certificada.
 
-## Decisiones principales
+> Este documento y los archivos de `docs/` reemplazan la arquitectura anterior de microservicios. No se deben usar los diagramas ni ADR antiguos que describen cinco servicios independientes, una base por servicio o Redis Pub/Sub como bus de eventos.
 
-| Aspecto | Decisión |
-|---|---|
-| Estilo arquitectónico | Microservicios con comunicación orientada a eventos (Redis Pub/Sub) |
-| Enfoque interno | Clean Architecture con cuatro capas (Dominio, Aplicación, Presentación, Infraestructura) |
-| Entrada | API Gateway con JWT; PWA como cliente |
-| Despliegue | Docker Compose en dos servidores de Oracle Cloud Free Tier |
-
-## Contenido
+## Mapa de documentación
 
 | Carpeta | Contenido |
 |---|---|
-| `docs/00-propuesta` | Propuesta de arquitectura de software |
-| `docs/01-analisis-de-sistema` | Actores, historias, requisitos, calidad, restricciones, drivers, decisiones arquitectónicas y escenarios de calidad |
-| `docs/02-arquitectura-software` | Arquitectura inicial, estilo, enfoque y componentes arquitectónicos |
-| `docs/03-diseño-de-software` | Diseño interno, patrones y principios |
-| `docs/04-modelo-c4` | Modelo C4, niveles 1 a 4 |
-| `docs/trazabilidad.md` | De qué requisito sale cada componente |
-| `tecnologia/boilerplate-clean-architecture` | Ejemplo de Clean Architecture: dominio, aplicación, infraestructura, presentación y pruebas completas |
+| `docs/01-analisis-de-sistema/` | Actores, 25 historias, requisitos, calidad, restricciones y drivers |
+| `docs/02-arquitectura-software/` | Estilo, Clean Architecture, módulos, comunicación, capacidad y despliegue |
+| `docs/04-modelo-c4/` | C4 niveles 1 a 4 |
+| `docs/05-sprint-1/` | Objetivo, alcance, backlog, tareas, criterios de terminado, resumen DOCX y presentación PPTX alineada |
+| `docs/decisiones/` | ADR vigentes |
+| `docs/diagramas/` | Fuentes Mermaid y SVG de los diagramas principales |
+| `tecnologia/boilerplate-clean-architecture/` | Ejemplo ejecutable del caso de uso de Alertas |
+
+## Orden de lectura
+
+1. `docs/05-sprint-1/plan-sprint-1.md`
+2. `docs/01-analisis-de-sistema/02-historias-del-usuario.md`
+3. `docs/01-analisis-de-sistema/03-requisitos-funcionales.md`
+4. `docs/02-arquitectura-software/estilo-arquitectonico.md`
+5. `docs/02-arquitectura-software/modulos-y-fronteras.md`
+6. `docs/02-arquitectura-software/capacidad-y-despliegue.md`
+7. `docs/04-modelo-c4/`
+
+## Estructura objetivo del código
+
+```text
+src/
+├── modules/
+│   ├── identidad/
+│   ├── perfiles/
+│   ├── publicaciones/
+│   ├── mensajeria/
+│   ├── alertas/
+│   └── notificaciones/
+├── shared/
+│   ├── auth/
+│   ├── config/
+│   ├── database/
+│   ├── events/
+│   ├── http/
+│   ├── observability/
+│   └── errors/
+├── composition/
+├── main-api.ts
+└── main-worker.ts
+specs/
+tests/
+migrations/
+deploy/
+.github/workflows/
+```
+
+Cada módulo contiene `domain/`, `application/`, `presentation/`, `infrastructure/` y `index.ts`. El archivo `index.ts` es la única fachada pública del módulo.
+
+## Comandos del ejemplo de Alertas
+
+```bash
+cd tecnologia/boilerplate-clean-architecture
+npm install
+npm test
+npm run demo
+```
+
+El ejemplo es un corte vertical didáctico con adaptadores en memoria; no representa todavía la integración productiva con PostgreSQL, Caddy, R2 o Web Push.

@@ -1,0 +1,11 @@
+flowchart TB
+  U["Dueño / moderador / visitante"] --> C["Caddy · TLS / reverse proxy"]
+  C --> API["API · REST + WebSocket"]
+  API --> M["Seis módulos del monolito"]
+  API --> DB[("PostgreSQL + PostGIS")]
+  W["Worker · mismo artefacto"] --> DB
+  W --> N["Notificaciones"]
+  API --> R2["Cloudflare R2"]
+  W --> P["Web Push"]
+  C -. "balanceo condicional" .-> API2["API secundaria opcional"]
+  API2 --> DB

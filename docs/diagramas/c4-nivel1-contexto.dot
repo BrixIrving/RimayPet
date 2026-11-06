@@ -1,0 +1,12 @@
+digraph G {
+ graph [rankdir=LR, bgcolor="white", pad="0.25", nodesep="0.5", ranksep="0.6", fontname="Arial", labelloc="t", label="C4 · NIVEL 1 · CONTEXTO", fontsize=18];
+ node [shape=box, style="rounded,filled", fontname="Arial", fontsize=10, color="#334455", fillcolor="#eef4fb", margin="0.18,0.12"];
+ edge [fontname="Arial", fontsize=9, color="#526477", arrowsize=0.7];
+ owner [label="Dueño / usuario\nde la comunidad",shape=box3d,fillcolor="#e7f3ff"];
+ mod [label="Moderador /\nadministrador",shape=box3d,fillcolor="#e7f3ff"];
+ visit [label="Visitante",shape=box3d,fillcolor="#e7f3ff"];
+ rp [label="RimayPet\nRed social + alertas geolocalizadas",fillcolor="#dcecff",penwidth=2];
+ r2 [label="Cloudflare R2\nAlmacenamiento externo"];
+ push [label="Web Push\nNotificaciones externas"];
+ owner -> rp; mod -> rp; visit -> rp; rp -> r2 [label="URL firmadas"]; rp -> push [label="VAPID"];
+}

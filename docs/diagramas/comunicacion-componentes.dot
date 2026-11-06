@@ -1,0 +1,15 @@
+digraph G {
+ graph [rankdir=LR, bgcolor="white", pad="0.25", nodesep="0.4", ranksep="0.55", fontname="Arial", labelloc="t", label="COMUNICACIÓN ENTRE COMPONENTES", fontsize=18];
+ node [shape=box, style="rounded,filled", fontname="Arial", fontsize=10, color="#334455", fillcolor="#eef4fb", margin="0.15,0.10"];
+ edge [fontname="Arial", fontsize=9, color="#526477", arrowsize=0.7];
+ pwa [label="PWA"]; api [label="API / WebSocket"]; mod [label="Módulos vía fachadas"];
+ db [shape=cylinder,label="PostgreSQL"]; out [shape=cylinder,label="Outbox"]; worker [label="Worker"]; perfil [label="Perfiles\n(destinatarios)"]; push [label="Web Push"]; r2 [label="R2"];
+ pwa -> api [label="REST / WS"];
+ api -> mod [label="llamada local + DTO"];
+ mod -> db [label="transacción ACID"];
+ mod -> out [label="evento en misma tx"];
+ worker -> out [label="SKIP LOCKED"];
+ worker -> perfil [label="consulta por fachada"];
+ worker -> push [label="HTTPS / VAPID"];
+ pwa -> r2 [dir=both,label="URL firmada"];
+}

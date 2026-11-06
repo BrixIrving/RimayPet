@@ -1,0 +1,14 @@
+digraph G {
+ graph [splines=ortho, rankdir=TB, bgcolor="white", pad="0.25", nodesep="0.35", ranksep="0.4", fontname="Arial", labelloc="t", label="C4 · NIVEL 3 · COMPONENTES DEL MÓDULO ALERTAS", fontsize=18];
+ node [shape=box, style="rounded,filled", fontname="Arial", fontsize=10, color="#334455", fillcolor="#eef4fb", margin="0.15,0.10"];
+ edge [fontname="Arial", fontsize=9, color="#526477", arrowsize=0.7];
+ ctrl [label="AlertasController\nPresentación",fillcolor="#e7f3ff"];
+ uc [label="ReportarMascotaPerdida\nAplicación",fillcolor="#dcecff"];
+ dom [label="ReporteMascotaPerdida\nDominio",fillcolor="#e8f6eb"];
+ repo [label="RepositorioReportes\nPuerto",shape=component];
+ pub [label="PublicadorEventos\nPuerto",shape=component];
+ pg [label="RepositorioPostgres\nInfraestructura"];
+ out [label="OutboxPostgres\nInfraestructura"];
+ db [shape=cylinder,label="PostgreSQL\nesquema alertas + outbox",fillcolor="#fff4df"];
+ ctrl -> uc; uc -> dom; uc -> repo; uc -> pub; pg -> repo [style=dashed,label="implementa"]; out -> pub [style=dashed,label="implementa"]; pg -> db; out -> db;
+}

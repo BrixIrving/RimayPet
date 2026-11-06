@@ -1,0 +1,23 @@
+digraph G {
+ graph [splines=ortho, rankdir=TB, bgcolor="white", pad="0.25", nodesep="0.35", ranksep="0.45", fontname="Arial", labelloc="t", label="C4 · NIVEL 2 · CONTENEDORES Y DESPLIEGUE", fontsize=18];
+ node [shape=box, style="rounded,filled", fontname="Arial", fontsize=10, color="#334455", fillcolor="#eef4fb", margin="0.15,0.10"];
+ edge [fontname="Arial", fontsize=9, color="#526477", arrowsize=0.7];
+ u [label="Dueño / Moderador / Visitante",shape=box3d,fillcolor="#e7f3ff"];
+ subgraph cluster_s1 {label="Servidor 1 · Oracle Arm · 1 OCPU / 6 GB";style="rounded";color="#778899";bgcolor="#f8fafc";
+ caddy [label="Caddy\nTLS + reverse proxy",fillcolor="#fff4df"];
+ pwa [label="PWA estática"];
+ api [label="Proceso API\nREST + WebSocket",fillcolor="#dcecff"];
+ worker [label="Proceso Worker\nmisma imagen",fillcolor="#fff4df"];
+ }
+ subgraph cluster_s2 {label="Servidor 2 · Oracle Arm · 1 OCPU / 6 GB";style="rounded";color="#778899";bgcolor="#f8fafc";
+ db [shape=cylinder,label="PostgreSQL + PostGIS\nuna instancia primaria",fillcolor="#e8f6eb"];
+ api2 [label="API secundaria\nOPCIONAL / condicional",style="rounded,dashed,filled",fillcolor="#f3efff"];
+ }
+ r2 [label="Cloudflare R2"]; push [label="Web Push"];
+ u -> caddy [label="HTTPS"];
+ caddy -> pwa [label="estáticos"];
+ caddy -> api [label="REST / WS"];
+ caddy -> api2 [style=dashed,label="balanceo si se activa"];
+ api -> db; worker -> db; api2 -> db;
+ api -> r2 [label="URL firmada"]; worker -> push;
+}

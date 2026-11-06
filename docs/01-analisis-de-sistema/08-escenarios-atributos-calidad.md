@@ -1,98 +1,26 @@
-# Escenarios de atributos de calidad de RimayPet
+# Escenarios de atributos de calidad
 
-Cada escenario tiene seis partes: fuente del estímulo, estímulo, artefacto, entorno, respuesta y medida. Las medidas marcadas como **propuesta por validar** deben confirmarse con pruebas de carga en la infraestructura gratuita real.
+Las métricas son objetivos de aceptación propuestos. Deben confirmarse con pruebas y mediciones del corte vertical; no son resultados ya obtenidos.
 
-## EQ-01. Rendimiento: consulta del feed
+| ID | Atributo | Estímulo y entorno | Respuesta esperada | Medida / verificación |
+|---|---|---|---|---|
+| EQ-01 | Escalabilidad y rendimiento | 1000 sesiones concurrentes, una acción cada 10 s; operación normal. | API procesa feed y operaciones comunes sin saturación. | p95 ≤ 2 s, errores < 1 %, CPU API < 80 % como objetivo. k6 + docker stats. |
+| EQ-02 | Escalabilidad | La carga sube de 200 a 1000 sesiones y la API supera umbral sostenido. | Se activa una segunda instancia del mismo artefacto detrás de Caddy, si el servidor de datos tiene CPU disponible. | Activación/configuración ≤ 15 min, sin cambio de código ni interrupción perceptible. Prueba k6. |
+| EQ-03 | Disponibilidad | El proceso worker se detiene mientras hay eventos pendientes. | La API sigue atendiendo; el worker reinicia y procesa Outbox pendiente. | Recuperación del worker ≤ 60 s; ningún evento confirmado se pierde. `docker kill` + consulta Outbox. |
+| EQ-04 | Disponibilidad | Web Push o R2 no responde. | La operación principal termina; el efecto externo se reintenta o queda en estado fallido. | API no espera al proveedor; hasta 5 intentos con backoff; dead-letter y registro. |
+| EQ-05 | Seguridad | Petición REST o WebSocket sin token, token vencido o firma inválida. | Acceso protegido rechazado. | 100 % de intentos de prueba rechazados; 401/403 según el caso. Postman/Newman. |
+| EQ-06 | Seguridad | Usuario intenta consultar o modificar recurso ajeno. | Se deniega acceso y no se filtra información. | Cero accesos indebidos en la batería automatizada. |
+| EQ-07 | Desplegabilidad | Se integra un cambio aprobado en main. | Pipeline construye, prueba y despliega el artefacto reproducible. | Despliegue ≤ 10 min como objetivo; pipeline verde y health checks aprobados. |
+| EQ-08 | Desplegabilidad | Prueba de humo posterior al despliegue falla. | Se restaura la etiqueta anterior y se verifica salud. | Rollback ≤ 5 min como objetivo; evidencia de versión activa. |
+| EQ-09 | Mantenibilidad | Se cambia el proveedor de almacenamiento de medios. | Solo se modifica el adaptador de infraestructura. | Cero cambios en Dominio y Aplicación; pruebas de casos de uso aprobadas. |
+| EQ-10 | Observabilidad | Se reporta que una alerta no llegó a un destinatario. | Se sigue el flujo desde reporte, evento Outbox, intento de envío y resultado. | Diagnóstico ≤ 5 min con `correlationId` y `eventId`. |
 
-| Elemento | Descripción |
-|---|---|
-| **Atributo de calidad** | Rendimiento (AC01) |
-| **Fuente** | Dueños de mascotas conectados |
-| **Estímulo** | Solicitudes simultáneas de feed, con scroll infinito y reacciones. |
-| **Artefacto** | Servicio de Publicaciones y su base de datos, con caché Redis. |
-| **Entorno** | Operación normal, con 1000 usuarios concurrentes simulados. |
-| **Respuesta** | El feed devuelve las publicaciones sin rechazar peticiones. |
-| **Medida** | **Propuesta por validar:** el 95 % de las consultas responde en 2 segundos o menos, con menos del 1 % de errores técnicos. |
-| **Verificación** | Prueba de carga con registro de tiempos y errores. |
-| **Estado** | Pendiente de validar en la infraestructura de despliegue. |
+## Perfil de carga de referencia
 
-## EQ-02. Disponibilidad: alerta de mascota perdida
+| Perfil | Usuarios virtuales | Actividad | RPS aproximadas |
+|---|---:|---|---:|
+| Ligero | 1000 | Una acción cada 30 s | 33 |
+| Normal de diseño | 1000 | Una acción cada 10 s | 100 |
+| Intenso | 1000 | Una acción cada 5 s | 200 |
 
-| Elemento | Descripción |
-|---|---|
-| **Atributo de calidad** | Disponibilidad (AC02) y Rendimiento (AC01) |
-| **Fuente** | Dueño que reporta una mascota perdida |
-| **Estímulo** | Se registra un reporte que debe llegar a todos los usuarios dentro del radio. |
-| **Artefacto** | Servicios de Alertas y Notificaciones, y bus Redis Pub/Sub. |
-| **Entorno** | Envío masivo en curso y resto de usuarios usando feed y mensajería. |
-| **Respuesta** | Alertas responde de inmediato y Notificaciones envía las alertas de forma asíncrona. |
-| **Medida** | **Propuesta por validar:** la respuesta a quien reporta tarda 1 segundo o menos (percentil 95) aun con el envío en curso, y el feed y la mensajería mantienen sus tiempos de EQ-01. |
-| **Verificación** | Reportar una alerta durante una prueba de carga y medir ambos tiempos. |
-| **Estado** | Pendiente de definir el tiempo máximo aceptable de entrega de la alerta. |
-
-## EQ-03. Escalabilidad: crecimiento de la comunidad
-
-| Elemento | Descripción |
-|---|---|
-| **Atributo de calidad** | Escalabilidad (AC03) |
-| **Fuente** | Crecimiento de usuarios conectados |
-| **Estímulo** | La concurrencia sube progresivamente de 200 a 1000 usuarios. |
-| **Artefacto** | Servicio de Mensajería (el más sensible a conexiones simultáneas). |
-| **Entorno** | Dos servidores gratuitos con Docker Compose. |
-| **Respuesta** | Se agregan réplicas solo del servicio saturado, sin tocar los demás. |
-| **Medida** | **Propuesta por validar:** soportar 1000 usuarios con el 95 % de las respuestas por debajo de 3 segundos y menos del 1 % de errores. |
-| **Verificación** | Aumentar la carga por etapas y registrar el uso de CPU y memoria por contenedor. |
-| **Estado** | Pendiente de confirmar los recursos disponibles en Oracle Free Tier. |
-
-## EQ-04. Seguridad: acceso no autorizado
-
-| Elemento | Descripción |
-|---|---|
-| **Atributo de calidad** | Seguridad (AC04) |
-| **Fuente** | Usuario sin sesión o con token inválido o vencido |
-| **Estímulo** | Intenta usar una función protegida o abrir el canal WebSocket. |
-| **Artefacto** | API Gateway y servicio de Perfiles (emisor del JWT). |
-| **Entorno** | Operación normal, toda comunicación sobre HTTPS. |
-| **Respuesta** | El Gateway rechaza la petición, no la reenvía y no expone datos. |
-| **Medida** | Rechazar el 100 % de los intentos sin JWT válido (código 401), incluida la conexión WebSocket. |
-| **Verificación** | Pruebas de acceso con y sin token, y con token vencido. |
-| **Estado** | Pendiente de definir qué recursos son públicos (por ejemplo, el estado de una mascota perdida). |
-
-## EQ-05. Mantenibilidad: cambio de proveedor de medios
-
-| Elemento | Descripción |
-|---|---|
-| **Atributo de calidad** | Mantenibilidad (AC05) |
-| **Fuente** | Equipo de desarrollo |
-| **Estímulo** | Se debe cambiar Cloudflare R2 por Supabase Storage. |
-| **Artefacto** | Servicio de Publicaciones. |
-| **Entorno** | Código organizado en cuatro capas y con pruebas del dominio. |
-| **Respuesta** | El cambio se limita a un adaptador de infraestructura. |
-| **Medida** | 0 archivos modificados en las capas de Dominio y Aplicación; pruebas existentes aprobadas. |
-| **Verificación** | Revisar el cambio de código y ejecutar las pruebas (incluida la prueba de dependencias de `tecnologia/`). |
-| **Estado** | Pendiente de implementar el servicio de Publicaciones. |
-
-## EQ-06. Observabilidad: diagnóstico de una alerta fallida
-
-| Elemento | Descripción |
-|---|---|
-| **Atributo de calidad** | Observabilidad (AC06) |
-| **Fuente** | Equipo de desarrollo |
-| **Estímulo** | Un usuario informa que no recibió una alerta que debía recibir. |
-| **Artefacto** | Servicios de Alertas y Notificaciones y sus registros. |
-| **Entorno** | Operación normal con registros estructurados. |
-| **Respuesta** | Se identifica en qué paso falló la propagación del reporte. |
-| **Medida** | **Propuesta por validar:** localizar el reporte y el paso fallido en 5 minutos o menos. |
-| **Verificación** | Simular un fallo de envío y buscar el identificador del reporte en los registros. |
-| **Estado** | Pendiente de definir el formato de los registros y el identificador de correlación. |
-
-## Resumen de escenarios
-
-| Código | Atributo de calidad | Qué se busca comprobar |
-|---|---|---|
-| EQ-01 | Rendimiento | Que el feed responda dentro del tiempo establecido con 1000 usuarios. |
-| EQ-02 | Disponibilidad | Que una alerta masiva no degrade al resto de la plataforma. |
-| EQ-03 | Escalabilidad | Que se escale solo el servicio saturado. |
-| EQ-04 | Seguridad | Que nada protegido se ejecute sin JWT válido. |
-| EQ-05 | Mantenibilidad | Que cambiar un proveedor solo afecte un adaptador. |
-| EQ-06 | Observabilidad | Que una alerta fallida pueda diagnosticarse con rapidez. |
+Para pruebas de pico se recomienda multiplicar temporalmente la tasa por 3. El supuesto de 3 ms de CPU por solicitud usado en el dimensionamiento es una hipótesis inicial que debe sustituirse por mediciones reales. La meta prioritaria es el perfil normal sostenido durante al menos 5 minutos.
