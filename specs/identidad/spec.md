@@ -1,4 +1,4 @@
-# Especificación inicial — módulo Identidad
+# Especificación inicial - módulo Identidad
 
 ## Objetivo
 Definir el comportamiento del módulo identidad dentro del monolito modular.

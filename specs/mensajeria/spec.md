@@ -1,4 +1,4 @@
-# Especificación inicial — módulo Mensajeria
+# Especificación inicial - módulo Mensajeria
 
 ## Objetivo
 Definir el comportamiento del módulo mensajeria dentro del monolito modular.

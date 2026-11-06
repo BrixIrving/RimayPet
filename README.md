@@ -1,4 +1,4 @@
-# RimayPet — Arquitectura de Software
+# RimayPet - Arquitectura de Software
 
 RimayPet es una red social para dueños de mascotas que integra perfiles, publicaciones, mensajería y alertas geolocalizadas para mascotas perdidas.
 
@@ -11,8 +11,6 @@ RimayPet es una red social para dueños de mascotas que integra perfiles, public
 - **Eventos:** patrón Transactional Outbox en PostgreSQL; consumidores idempotentes.
 - **Infraestructura:** dos VM Oracle Cloud Free Tier (1 OCPU y 6 GB RAM por VM, según el dimensionamiento documentado).
 - **Meta de capacidad:** hasta 1000 sesiones concurrentes con perfil de actividad normal; es un objetivo de prueba, no una capacidad certificada.
-
-> Este documento y los archivos de `docs/` reemplazan la arquitectura anterior de microservicios. No se deben usar los diagramas ni ADR antiguos que describen cinco servicios independientes, una base por servicio o Redis Pub/Sub como bus de eventos.
 
 ## Mapa de documentación
 

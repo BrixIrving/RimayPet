@@ -1,4 +1,4 @@
-# Especificación — módulo Alertas
+# Especificación - módulo Alertas
 
 ## Objetivo
 Administrar reportes de mascotas perdidas, avistamientos, transiciones de estado y consulta pública limitada.

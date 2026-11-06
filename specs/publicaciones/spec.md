@@ -1,4 +1,4 @@
-# Especificación inicial — módulo Publicaciones
+# Especificación inicial - módulo Publicaciones
 
 ## Objetivo
 Definir el comportamiento del módulo publicaciones dentro del monolito modular.

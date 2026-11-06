@@ -1,4 +1,4 @@
-# Ejemplo Clean Architecture — módulo Alertas
+# Ejemplo Clean Architecture - módulo Alertas
 
 Este directorio contiene un corte vertical didáctico del módulo Alertas dentro del **monolito modular RimayPet**. No es un microservicio independiente.
 

@@ -1,4 +1,4 @@
-# Especificación inicial — módulo Perfiles
+# Especificación inicial - módulo Perfiles
 
 ## Objetivo
 Definir el comportamiento del módulo perfiles dentro del monolito modular.

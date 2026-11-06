@@ -1,4 +1,4 @@
-# Especificación inicial — módulo Notificaciones
+# Especificación inicial - módulo Notificaciones
 
 ## Objetivo
 Definir el comportamiento del módulo notificaciones dentro del monolito modular.
