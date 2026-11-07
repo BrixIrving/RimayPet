@@ -8,9 +8,9 @@ El enfoque interno es **Clean Architecture por módulo**: Presentación, Aplicac
 
 ## Diagrama del estilo y enfoque
 
-![Monolito modular con Clean Architecture](../diagramas/estilo-monolito-modular.svg)
+![Monolito modular con Clean Architecture](../img/estilo-y-enfoque.png)
 
-Fuente editable: `../diagramas/estilo-monolito-modular.mmd`.
+
 
 ## Justificación
 
